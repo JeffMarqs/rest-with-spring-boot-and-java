@@ -6,7 +6,9 @@ import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import br.com.erudio.data.vo.v1.PersonDTO;
 import br.com.erudio.exceptions.ResourceNotFoundException;
+import br.com.erudio.mapper.Mapper;
 import br.com.erudio.model.Person;
 import br.com.erudio.repositories.PersonRepository;
 
@@ -18,29 +20,34 @@ public class PersonServices {
 
 	private Logger logger = Logger.getLogger(PersonServices.class.getName());
 
-	public List<Person> findAll() {
+	public List<PersonDTO> findAll() {
 
 		logger.info("Finding all people!");
 		
-		return repository.findAll();
+		return Mapper.parseListObjects(repository.findAll(), PersonDTO.class) ;
 	}
 
-	public Person findById(Long id) {
+	public PersonDTO findById(Long id) {
 
 		logger.info("Finding one Person!");
-
-		return repository.findById(id)
+		
+		var entity = repository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("No records found this ID!"));
+
+		return Mapper.parseObject(entity, PersonDTO.class);
 	}
 
-	public Person create(Person person) {
+	public PersonDTO create(PersonDTO personDTO) {
 		
 		logger.info("Creating one person!");
 		
-		return repository.save(person);
+		var entity = repository.save(Mapper.parseObject(personDTO, Person.class));
+		var entityDTO = Mapper.parseObject(entity, PersonDTO.class);
+		
+		return entityDTO;
 	}
 	
-	public Person update(Person person) {
+	public PersonDTO update(PersonDTO person) {
 		
 		logger.info("Updating one person!");
 		
@@ -49,10 +56,12 @@ public class PersonServices {
 		
 		entity.setFirstName(person.getFirstName());
 		entity.setLastName(person.getLastName());
-		entity.setAddresss(person.getAddresss());
+		entity.setAddress(person.getAddress());
 		entity.setGender(person.getGender());
 		
-		return repository.save(entity);
+		repository.save(entity);
+		
+		return Mapper.parseObject(entity, PersonDTO.class);
 	}
 	
 	public void delete(Long id) {
