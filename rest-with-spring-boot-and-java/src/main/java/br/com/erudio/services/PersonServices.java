@@ -10,6 +10,7 @@ import br.com.erudio.data.vo.v1.PersonDTO;
 import br.com.erudio.data.vo.v2.PersonDTOV2;
 import br.com.erudio.exceptions.ResourceNotFoundException;
 import br.com.erudio.mapper.Mapper;
+import br.com.erudio.mapper.custom.PersonMapper;
 import br.com.erudio.model.Person;
 import br.com.erudio.repositories.PersonRepository;
 
@@ -18,6 +19,9 @@ public class PersonServices {
 
 	@Autowired
 	PersonRepository repository;
+	
+	@Autowired
+	PersonMapper customerMapper;
 
 	private Logger logger = Logger.getLogger(PersonServices.class.getName());
 
@@ -79,8 +83,8 @@ public class PersonServices {
 		
 		logger.info("Creating one person with V2!");
 
-		var entity = repository.save(Mapper.parseObject(personDTO, Person.class));
-		var entityDTO = Mapper.parseObject(entity, PersonDTOV2.class);
+		var entity = repository.save(customerMapper.convertDTOToEntity(personDTO));
+		var entityDTO = customerMapper.convertEntityToDTO(entity);
 		
 		return entityDTO;
 	}
