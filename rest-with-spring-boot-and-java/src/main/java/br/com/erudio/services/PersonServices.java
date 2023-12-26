@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import br.com.erudio.controllers.PersonController;
 import br.com.erudio.data.dto.v1.PersonDTO;
+import br.com.erudio.exceptions.RequiredObjectIsNullException;
 import br.com.erudio.exceptions.ResourceNotFoundException;
 import br.com.erudio.mapper.Mapper;
 import br.com.erudio.model.Person;
@@ -49,6 +50,9 @@ public class PersonServices {
 
 	public PersonDTO create(PersonDTO personDTO) {
 		
+		if (personDTO == null)
+			throw new RequiredObjectIsNullException();
+		
 		logger.info("Creating one person!");
 		
 		var entity = repository.save(Mapper.parseObject(personDTO, Person.class));
@@ -59,17 +63,20 @@ public class PersonServices {
 		return dto;
 	}
 	
-	public PersonDTO update(PersonDTO person) {
+	public PersonDTO update(PersonDTO personDTO) {
+		
+		if (personDTO == null)
+			throw new RequiredObjectIsNullException();
 		
 		logger.info("Updating one person!");
 		
-		var entity = repository.findById(person.getKey())
+		var entity = repository.findById(personDTO.getKey())
 		.orElseThrow(() -> new ResourceNotFoundException("No records found this ID!"));
 		
-		entity.setFirstName(person.getFirstName());
-		entity.setLastName(person.getLastName());
-		entity.setAddress(person.getAddress());
-		entity.setGender(person.getGender());
+		entity.setFirstName(personDTO.getFirstName());
+		entity.setLastName(personDTO.getLastName());
+		entity.setAddress(personDTO.getAddress());
+		entity.setGender(personDTO.getGender());
 		
 		repository.save(entity);
 		
