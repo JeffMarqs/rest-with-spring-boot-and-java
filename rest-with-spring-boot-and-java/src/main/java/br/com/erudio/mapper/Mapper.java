@@ -5,9 +5,17 @@ import java.util.List;
 
 import org.modelmapper.ModelMapper;
 
+import br.com.erudio.data.dto.v1.PersonDTO;
+import br.com.erudio.model.Person;
+
 public class Mapper {
 	
 	private static ModelMapper mapper = new ModelMapper();
+	
+	static {
+		mapper.createTypeMap(Person.class, PersonDTO.class).addMapping(Person::getId, PersonDTO::setKey);
+		mapper.createTypeMap(PersonDTO.class, Person.class).addMapping(PersonDTO::getKey, Person::setId);
+	}
 	
 	public static <O, D> D parseObject(O origin, Class<D> destination) {
 		return mapper.map(origin, destination);
