@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.erudio.data.vo.v1.PersonDTO;
+import br.com.erudio.data.dto.v1.PersonDTO;
 import br.com.erudio.services.PersonServices;
 import br.com.erudio.util.MediaType;
 
@@ -24,8 +24,8 @@ public class PersonController {
 	@Autowired
 	private PersonServices personServices;
 
-	@GetMapping(value = "/{id}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML,
-			MediaType.APPLICATION_YML })
+	@GetMapping(value = "/{id}", 
+			produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML,	MediaType.APPLICATION_YML })
 	public PersonDTO findById(@PathVariable(value = "id") Long id) {
 		return personServices.findById(id);
 	}
@@ -35,16 +35,16 @@ public class PersonController {
 		return personServices.findAll();
 	}
 
-	@PostMapping(consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML,
-			MediaType.APPLICATION_YML }, produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML,
-					MediaType.APPLICATION_YML })
+	@PostMapping(
+			consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML,	MediaType.APPLICATION_YML }, 
+			produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML,	MediaType.APPLICATION_YML })
 	public PersonDTO create(@RequestBody PersonDTO person) {
 		return personServices.create(person);
 	}
 
-	@PutMapping(consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML,
-			MediaType.APPLICATION_YML }, produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML,
-					MediaType.APPLICATION_YML })
+	@PutMapping(
+			consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML,	MediaType.APPLICATION_YML }, 
+			produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML,	MediaType.APPLICATION_YML })
 	public PersonDTO uptade(@RequestBody PersonDTO person) {
 		return personServices.update(person);
 	}
