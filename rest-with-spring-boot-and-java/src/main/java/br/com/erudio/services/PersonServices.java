@@ -1,19 +1,19 @@
 package br.com.erudio.services;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 import java.util.List;
 import java.util.logging.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 import org.springframework.stereotype.Service;
 
 import br.com.erudio.controllers.PersonController;
 import br.com.erudio.data.dto.v1.PersonDTO;
 import br.com.erudio.exceptions.RequiredObjectIsNullException;
 import br.com.erudio.exceptions.ResourceNotFoundException;
-import br.com.erudio.mapper.Mapper;
-import br.com.erudio.model.Person;
+import br.com.erudio.mapper.MapStruct;
 import br.com.erudio.repositories.PersonRepository;
 
 @Service
@@ -28,7 +28,7 @@ public class PersonServices {
 
 		logger.info("Finding all people!");
 		
-		var personsDto =  Mapper.parseListObjects(repository.findAll(), PersonDTO.class);
+		var personsDto = MapStruct.INSTANCE.personListToPersonDTOlist(repository.findAll());
 		
 		personsDto.stream().forEach(p -> p.add(linkTo(methodOn(PersonController.class).findById(p.getKey())).withSelfRel()));
 		
@@ -42,7 +42,7 @@ public class PersonServices {
 		var entity = repository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("No records found this ID!"));
 
-		var dto = Mapper.parseObject(entity, PersonDTO.class);
+		var dto = MapStruct.INSTANCE.personToPersonDTO(entity);
 		dto.add(linkTo(methodOn(PersonController.class).findById(id)).withSelfRel());
 		
 		return dto;
@@ -55,8 +55,9 @@ public class PersonServices {
 		
 		logger.info("Creating one person!");
 		
-		var entity = repository.save(Mapper.parseObject(personDTO, Person.class));
-		var dto = Mapper.parseObject(entity, PersonDTO.class);
+		var entity = repository.save(MapStruct.INSTANCE.personDTOToPerson(personDTO));
+		
+		var dto = MapStruct.INSTANCE.personToPersonDTO(entity);
 		
 		dto.add(linkTo(methodOn(PersonController.class).findById(dto.getKey())).withSelfRel());
 		
@@ -80,7 +81,7 @@ public class PersonServices {
 		
 		repository.save(entity);
 		
-		var dto = Mapper.parseObject(entity, PersonDTO.class);
+		var dto = MapStruct.INSTANCE.personToPersonDTO(entity);
 		
 		dto.add(linkTo(methodOn(PersonController.class).findById(dto.getKey())).withSelfRel());
 		

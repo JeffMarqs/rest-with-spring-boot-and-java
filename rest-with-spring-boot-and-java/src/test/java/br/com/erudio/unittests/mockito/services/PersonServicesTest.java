@@ -51,8 +51,10 @@ class PersonServicesTest {
 		assertEquals(14, people.size());
 		
 		var personOne = people.get(1);
+		
+		System.out.println(personOne.toString());
 
-		assertTrue(personOne.toString().contains("links: [</api/person/v1/1>;rel=\"self\"]"));
+		assertTrue(personOne.toString().contains("links: [</api/person/v1/{id}>;rel=\"self\"]"));
 		assertEquals("Addres Test1", personOne.getAddress());
 		assertEquals("First Name Test1", personOne.getFirstName());
 		assertEquals("Last Name Test1", personOne.getLastName());
@@ -60,7 +62,7 @@ class PersonServicesTest {
 		
 		var personFour = people.get(4);
 		
-		assertTrue(personFour.toString().contains("links: [</api/person/v1/4>;rel=\"self\"]"));
+		assertTrue(personFour.toString().contains("links: [</api/person/v1/{id}>;rel=\"self\"]"));
 		assertEquals("Addres Test4", personFour.getAddress());
 		assertEquals("First Name Test4", personFour.getFirstName());
 		assertEquals("Last Name Test4", personFour.getLastName());
@@ -68,7 +70,7 @@ class PersonServicesTest {
 		
 		var personSeven = people.get(7);
 		
-		assertTrue(personSeven.toString().contains("links: [</api/person/v1/7>;rel=\"self\"]"));
+		assertTrue(personSeven.toString().contains("links: [</api/person/v1/{id}>;rel=\"self\"]"));
 		assertEquals("Addres Test7", personSeven.getAddress());
 		assertEquals("First Name Test7", personSeven.getFirstName());
 		assertEquals("Last Name Test7", personSeven.getLastName());
@@ -106,7 +108,7 @@ class PersonServicesTest {
 		var persisted = entity;
 		persisted.setId(1L);
 
-		var dto = input.mockVO(1);
+		var dto = input.mockDTO(1);
 		dto.setKey(1L);
 
 		when(repositoy.save(entity)).thenReturn(persisted);
@@ -151,7 +153,7 @@ class PersonServicesTest {
 		var persisted = entity;
 		persisted.setId(1L);
 
-		var dto = input.mockVO(1);
+		var dto = input.mockDTO(1);
 		dto.setKey(1L);
 
 		when(repositoy.save(entity)).thenReturn(persisted);
