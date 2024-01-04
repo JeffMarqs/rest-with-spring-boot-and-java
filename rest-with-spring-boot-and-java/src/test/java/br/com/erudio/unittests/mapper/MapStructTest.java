@@ -8,11 +8,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import br.com.erudio.data.dto.v1.PersonDTO;
-import br.com.erudio.mapper.Mapper;
+import br.com.erudio.mapper.MapStruct;
 import br.com.erudio.model.Person;
 import br.com.erudio.unittests.mapper.mocks.MockPerson;
 
-public class ModelMapperTest {
+public class MapStructTest {
     
     MockPerson inputObject;
 
@@ -23,7 +23,8 @@ public class ModelMapperTest {
 
     @Test
     public void parseEntityToVOTest() {
-        PersonDTO output = Mapper.parseObject(inputObject.mockEntity(), PersonDTO.class);
+      //  PersonDTO output = Mapper.parseObject(inputObject.mockEntity(), PersonDTO.class);
+    	PersonDTO output = MapStruct.INSTANCE.personToPersonDTO(inputObject.mockEntity());
         assertEquals(Long.valueOf(0L), output.getKey());
         assertEquals("First Name Test0", output.getFirstName());
         assertEquals("Last Name Test0", output.getLastName());
@@ -33,7 +34,8 @@ public class ModelMapperTest {
 
     @Test
     public void parseEntityListToVOListTest() {
-        List<PersonDTO> outputList = Mapper.parseListObjects(inputObject.mockEntityList(), PersonDTO.class);
+     //   List<PersonDTO> outputList = Mapper.parseListObjects(inputObject.mockEntityList(), PersonDTO.class);
+    	List<PersonDTO> outputList = MapStruct.INSTANCE.personListToPersonDTOlist(inputObject.mockEntityList());
         PersonDTO outputZero = outputList.get(0);
         
         assertEquals(Long.valueOf(0L), outputZero.getKey());
@@ -61,7 +63,8 @@ public class ModelMapperTest {
 
     @Test
     public void parseVOToEntityTest() {
-        Person output = Mapper.parseObject(inputObject.mockVO(), Person.class);
+     //  Person output = Mapper.parseObject(inputObject.mockDTO(), Person.class);
+    	Person output = MapStruct.INSTANCE.personDTOToPerson(inputObject.mockDTO());
         assertEquals(Long.valueOf(0L), output.getId());
         assertEquals("First Name Test0", output.getFirstName());
         assertEquals("Last Name Test0", output.getLastName());
@@ -71,7 +74,8 @@ public class ModelMapperTest {
 
     @Test
     public void parserVOListToEntityListTest() {
-        List<Person> outputList = Mapper.parseListObjects(inputObject.mockVOList(), Person.class);
+      //  List<Person> outputList = Mapper.parseListObjects(inputObject.mockDTOList(), Person.class);
+    	List<Person> outputList = MapStruct.INSTANCE.personDTOListToPersonlist(inputObject.mockDTOList());
         Person outputZero = outputList.get(0);
         
         assertEquals(Long.valueOf(0L), outputZero.getId());
