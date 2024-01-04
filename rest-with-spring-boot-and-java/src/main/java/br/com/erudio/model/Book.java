@@ -5,19 +5,25 @@ import java.util.Objects;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 
 @Entity
 @Table(name = "books")
 public class Book {
 	
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
 	private String author;
 	
 	@Column(name = "launch_Date", nullable = false, length = 6)
+	@Temporal(TemporalType.DATE)
 	private Date launchDate;
 	
 	@Column(nullable = false)

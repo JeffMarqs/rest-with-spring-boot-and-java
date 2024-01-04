@@ -9,7 +9,7 @@ import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import br.com.erudio.controllers.PersonController;
+import br.com.erudio.controllers.BookController;
 import br.com.erudio.data.dto.v1.BookDTO;
 import br.com.erudio.exceptions.RequiredObjectIsNullException;
 import br.com.erudio.exceptions.ResourceNotFoundException;
@@ -22,7 +22,7 @@ public class BookServices {
 	@Autowired
 	BookRepository repository;
 
-	private Logger logger = Logger.getLogger(PersonServices.class.getName());
+	private Logger logger = Logger.getLogger(BookServices.class.getName());
 
 	public List<BookDTO> findAll() {
 
@@ -31,7 +31,7 @@ public class BookServices {
 		var bookListDto = MapStruct.INSTANCE.bookListToBookDTOlist(repository.findAll());
 
 		bookListDto.stream()
-				.forEach(b -> b.add(linkTo(methodOn(PersonController.class).findById(b.getKey())).withSelfRel()));
+				.forEach(b -> b.add(linkTo(methodOn(BookController.class).findById(b.getKey())).withSelfRel()));
 
 		return bookListDto;
 	}
@@ -44,7 +44,7 @@ public class BookServices {
 				.orElseThrow(() -> new ResourceNotFoundException("No records found this ID!"));
 
 		var dto = MapStruct.INSTANCE.bookToBookDTO(entity);
-		dto.add(linkTo(methodOn(PersonController.class).findById(id)).withSelfRel());
+		dto.add(linkTo(methodOn(BookController.class).findById(id)).withSelfRel());
 
 		return dto;
 	}
@@ -60,7 +60,7 @@ public class BookServices {
 
 		var dto = MapStruct.INSTANCE.bookToBookDTO(entity);
 
-		dto.add(linkTo(methodOn(PersonController.class).findById(dto.getKey())).withSelfRel());
+		dto.add(linkTo(methodOn(BookController.class).findById(dto.getKey())).withSelfRel());
 
 		return dto;
 	}
@@ -84,7 +84,7 @@ public class BookServices {
 
 		var dto = MapStruct.INSTANCE.bookToBookDTO(entity);
 
-		dto.add(linkTo(methodOn(PersonController.class).findById(dto.getKey())).withSelfRel());
+		dto.add(linkTo(methodOn(BookController.class).findById(dto.getKey())).withSelfRel());
 
 		return dto;
 	}
