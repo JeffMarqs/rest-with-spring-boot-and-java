@@ -7,10 +7,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import br.com.erudio.configs.TestConfigs;
-import br.com.erudio.integrationtests.testcontainers.AbstracticIntegrationTest;
+import br.com.erudio.integrationtests.testcontainers.AbstractIntegrationTest;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-public class SwaggerIntegrationTest extends AbstracticIntegrationTest {
+public class SwaggerIntegrationTest extends AbstractIntegrationTest {
 
 	@Test
 	public void shouldDisplaySwaggerUiPage() {

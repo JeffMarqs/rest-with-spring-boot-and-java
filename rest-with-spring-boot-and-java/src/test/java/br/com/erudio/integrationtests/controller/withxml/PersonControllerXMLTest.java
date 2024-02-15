@@ -1,4 +1,4 @@
-package br.com.erudio.integrationtests.controller.withjson;
+package br.com.erudio.integrationtests.controller.withxml;
 
 import static io.restassured.RestAssured.given;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -18,7 +18,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 
 import br.com.erudio.configs.TestConfigs;
 import br.com.erudio.data.dto.v1.security.TokenDTO;
@@ -33,16 +33,16 @@ import io.restassured.specification.RequestSpecification;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @TestMethodOrder(OrderAnnotation.class)
-public class PersonControllerJsonTest extends AbstractIntegrationTest {
+public class PersonControllerXMLTest extends AbstractIntegrationTest {
 
 	private static RequestSpecification specification;
-	private static ObjectMapper objectMapper;
+	private static XmlMapper objectMapper;
 
 	private static PersonDTO person;
 
 	@BeforeAll
 	public static void setup() {
-		objectMapper = new ObjectMapper();
+		objectMapper = new XmlMapper();
 		objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 
 		person = new PersonDTO();
@@ -54,8 +54,8 @@ public class PersonControllerJsonTest extends AbstractIntegrationTest {
 		AccountCredentialsDTO user = new AccountCredentialsDTO("leandro", "admin123");
 
 		var accessToken = given().basePath("/auth/signin").port(TestConfigs.SERVER_PORT)
-				.contentType(TestConfigs.CONTENT_TYPE_JSON).body(user).when().post().then().statusCode(200).extract()
-				.body().as(TokenDTO.class).getAccessToken();
+				.contentType(TestConfigs.CONTENT_TYPE_XML).accept(TestConfigs.CONTENT_TYPE_XML).body(user).when().post()
+				.then().statusCode(200).extract().body().as(TokenDTO.class).getAccessToken();
 
 		specification = new RequestSpecBuilder()
 				.addHeader(TestConfigs.HEADER_PARAM_AUTHORIZATION, "Bearer " + accessToken)
@@ -69,8 +69,9 @@ public class PersonControllerJsonTest extends AbstractIntegrationTest {
 	public void testCreate() throws JsonMappingException, JsonProcessingException {
 		mockPerson();
 
-		var content = given().spec(specification).contentType(TestConfigs.CONTENT_TYPE_JSON).body(person).when().post()
-				.then().statusCode(200).extract().body().asString();
+		var content = given().spec(specification).contentType(TestConfigs.CONTENT_TYPE_XML)
+				.accept(TestConfigs.CONTENT_TYPE_XML).body(person).when().post().then().statusCode(200).extract().body()
+				.asString();
 
 		PersonDTO foundPersonOne = objectMapper.readValue(content, PersonDTO.class);
 
@@ -96,8 +97,9 @@ public class PersonControllerJsonTest extends AbstractIntegrationTest {
 	public void testUptade() throws JsonMappingException, JsonProcessingException {
 		person.setLastName("Piquet Souto Maior");
 
-		var content = given().spec(specification).contentType(TestConfigs.CONTENT_TYPE_JSON).body(person).when().post()
-				.then().statusCode(200).extract().body().asString();
+		var content = given().spec(specification).contentType(TestConfigs.CONTENT_TYPE_XML)
+				.accept(TestConfigs.CONTENT_TYPE_XML).body(person).when().post().then().statusCode(200).extract().body()
+				.asString();
 
 		PersonDTO foundPersonOne = objectMapper.readValue(content, PersonDTO.class);
 
@@ -123,9 +125,9 @@ public class PersonControllerJsonTest extends AbstractIntegrationTest {
 	public void testFindById() throws JsonMappingException, JsonProcessingException {
 		mockPerson();
 
-		var content = given().spec(specification).contentType(TestConfigs.CONTENT_TYPE_JSON)
-				.header(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_ERUDIO).pathParam("id", person.getId())
-				.when().get("{id}").then().statusCode(200).extract().body().asString();
+		var content = given().spec(specification).contentType(TestConfigs.CONTENT_TYPE_XML)
+				.accept(TestConfigs.CONTENT_TYPE_XML).header(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_ERUDIO)
+				.pathParam("id", person.getId()).when().get("{id}").then().statusCode(200).extract().body().asString();
 
 		PersonDTO persistedPerson = objectMapper.readValue(content, PersonDTO.class);
 
@@ -150,8 +152,8 @@ public class PersonControllerJsonTest extends AbstractIntegrationTest {
 	@Order(4)
 	public void testDelete() throws JsonMappingException, JsonProcessingException {
 
-		given().spec(specification).contentType(TestConfigs.CONTENT_TYPE_JSON).pathParam("id", person.getId()).when()
-				.delete("{id}").then().statusCode(204);
+		given().spec(specification).contentType(TestConfigs.CONTENT_TYPE_XML).accept(TestConfigs.CONTENT_TYPE_XML)
+				.pathParam("id", person.getId()).when().delete("{id}").then().statusCode(204);
 
 	}
 
@@ -159,8 +161,8 @@ public class PersonControllerJsonTest extends AbstractIntegrationTest {
 	@Order(5)
 	public void testFindAll() throws JsonMappingException, JsonProcessingException {
 
-		var content = given().spec(specification).contentType(TestConfigs.CONTENT_TYPE_JSON).when().get().then()
-				.statusCode(200).extract().body().asString();
+		var content = given().spec(specification).contentType(TestConfigs.CONTENT_TYPE_XML)
+				.accept(TestConfigs.CONTENT_TYPE_XML).when().get().then().statusCode(200).extract().body().asString();
 		// .as(new TypeRef<List<PersonDTO>>() {});
 
 		List<PersonDTO> people = objectMapper.readValue(content, new TypeReference<List<PersonDTO>>() {
@@ -206,8 +208,8 @@ public class PersonControllerJsonTest extends AbstractIntegrationTest {
 				.setPort(TestConfigs.SERVER_PORT).addFilter(new RequestLoggingFilter(LogDetail.ALL))
 				.addFilter(new ResponseLoggingFilter(LogDetail.ALL)).build();
 
-		given().spec(specificationWithoutToken).contentType(TestConfigs.CONTENT_TYPE_JSON).when().get().then()
-				.statusCode(403).extract().body().asString();
+		given().spec(specificationWithoutToken).contentType(TestConfigs.CONTENT_TYPE_XML)
+				.accept(TestConfigs.CONTENT_TYPE_XML).when().get().then().statusCode(403).extract().body().asString();
 
 	}
 
