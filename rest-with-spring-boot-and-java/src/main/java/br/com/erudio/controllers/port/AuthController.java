@@ -1,4 +1,4 @@
-package br.com.erudio.controllers;
+package br.com.erudio.controllers.port;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
