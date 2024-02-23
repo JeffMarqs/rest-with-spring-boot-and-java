@@ -9,7 +9,7 @@ import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import br.com.erudio.controllers.BookController;
+import br.com.erudio.controllers.port.BookController;
 import br.com.erudio.data.dto.v1.BookDTO;
 import br.com.erudio.exceptions.RequiredObjectIsNullException;
 import br.com.erudio.exceptions.ResourceNotFoundException;

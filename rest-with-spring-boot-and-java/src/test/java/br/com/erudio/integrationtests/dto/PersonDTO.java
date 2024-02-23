@@ -15,6 +15,7 @@ public class PersonDTO implements Serializable{
     private String lastName;
     private String address;
     private String gender;
+	private Boolean enabled;
     
     public PersonDTO() {
     }
@@ -58,10 +59,18 @@ public class PersonDTO implements Serializable{
     public void setGender(String gender) {
         this.gender = gender;
     }
+    
+    public Boolean getEnabled() {
+    	return enabled;
+    }
+    
+    public void setEnabled(Boolean enabled) {
+    	this.enabled = enabled;
+    }
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(address, firstName, gender, id, lastName);
+		return Objects.hash(address, enabled, firstName, gender, id, lastName);
 	}
 
 	@Override
@@ -73,10 +82,9 @@ public class PersonDTO implements Serializable{
 		if (getClass() != obj.getClass())
 			return false;
 		PersonDTO other = (PersonDTO) obj;
-		return Objects.equals(address, other.address) && Objects.equals(firstName, other.firstName)
-				&& Objects.equals(gender, other.gender) && Objects.equals(id, other.id)
-				&& Objects.equals(lastName, other.lastName);
+		return Objects.equals(address, other.address) && Objects.equals(enabled, other.enabled)
+				&& Objects.equals(firstName, other.firstName) && Objects.equals(gender, other.gender)
+				&& Objects.equals(id, other.id) && Objects.equals(lastName, other.lastName);
 	}
-    
-    
+
 }
